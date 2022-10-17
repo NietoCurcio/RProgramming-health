@@ -1,5 +1,5 @@
-# source("./helpers.R")
-source("./app/helpers.R")
+source("./helpers.R")
+# source("./app/helpers.R")
 
 data2019 <- getDataByYear(2019)
 data2020 <- getDataByYear(2020)

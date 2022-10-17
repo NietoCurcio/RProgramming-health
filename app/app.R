@@ -4,7 +4,7 @@ library(leaflet)
 library(geobr)
 library(shinydashboard)
 
-# source("./global.R")
+source("./global.R")
 
 header <- dashboardHeader(title = "VAX*SIM - Study")
 
