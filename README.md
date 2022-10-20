@@ -1,12 +1,11 @@
 # Brazil muni stats
 
+<img src=".github/app.png" width="760px">
+
 This application is deployed into EC2 AWS with shiny-server.
 
 - http://ec2-54-94-50-220.sa-east-1.compute.amazonaws.com/
-
-Or
-
-- http://nietocurcio.com/
+- http://nietocurcio.com/ (configured domain with AWS Elastic IP)
 
 ## Instructions on how to deploy with shiny-server and EC2
 
