@@ -118,7 +118,8 @@ server <- function(input, output, session) {
         weight = 2,
         fillOpacity = 0.7,
         dashArray = "3",
-        fillColor = ~pal(colorData),
+        # fillColor = ~pal(colorData),
+        fillColor = pal(colorData),
         layerId = ~name_muni
       ) %>% addLegend(
         position = "bottomleft",
