@@ -11,6 +11,8 @@ This application is deployed into EC2 AWS with shiny-server.
 
 1. Create an EC2 Ubuntu instance and connect to the machine via SSH
 
+1.1 It may be necessary to configure Inbound rules for the instance, on port 22 (ssh), otherwise when trying to connect to the machine you'll get an "ssh: connect to host ec2 port 22: Resource temporarily unavailable" error
+
 2. Install R
 
 ```bash
@@ -36,10 +38,44 @@ $ sudo gdebi shiny-server-1.5.19.995-amd64.deb
 
 5. Edit the Inbound rule in the firewall of the EC2 instance in the shiny-server port (default shiny-server port 3838).
 
-6. [Optional] configure `shiny-server.conf` at `etc/shiny-server` (set to `preserve_logs true;` or set port to 80 with `listen 80;`)
+6. configure `shiny-server.conf` at `etc/shiny-server` (set to `preserve_logs true;` or set port to 80 with `listen 80;`)
 
 - server logs are located at `var/log/shiny-server` by default.
 - shiny apps are located at `srv/shiny-server`
+
+`shiny-server.conf` example:
+
+```bash
+# Instruct Shiny Server to run applications as the user "shiny"
+run_as shiny;
+
+preserve_logs true;
+
+# Define a server that listens on port 3838
+server {
+  # listen 3838;
+  listen 80;
+
+  # Define a location at the base URL
+  location / {
+
+    # Host the directory of Shiny Apps stored in this directory
+    # site_dir /srv/shiny-server;
+    app_dir /srv/shiny-server/myapp;
+
+    # Log all Shiny output to files in this directory
+    log_dir /var/log/shiny-server;
+
+    # When a user visits the base URL rather than a particular application,
+    # an index of the applications available in this directory will be shown.
+    directory_index on;
+  }
+}
+```
+
+7. configure Inbound rules in the instance to accept connections from any IP (0.0.0.0/0) on port 80 (the app port). HTTP type, TCP protocol.
+
+8. [Optional] Allocate an Elastic IP and associate the IP to the EC2 instance created. Then configure your domain provider to use the "A" type in the DNS configuration pointing to that IP allocated, so that this IP will be resolved to the domain name.
 
 Tips for installing packages:
 
