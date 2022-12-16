@@ -57,3 +57,30 @@ getDataByYear <- function(year) {
   data <- municipalities %>% left_join(custom_data_df, by = c("code_muni" = "code_muni"))
   return(data)
 }
+
+getStatesByYear <- function(year) {
+  states <- read_state(
+    year = year,
+    showProgress = FALSE
+  )
+
+  states <- rmapshaper::ms_simplify(states)
+
+  # without the next line, the following warning happens when calling leaflet:
+  # "sf layer has inconsistent datum (+proj=longlat +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +no_defs). Need '+proj=longlat +datum=WGS84'"
+  # src: https://stackoverflow.com/questions/57223853/how-to-apply-spatial-polygons-to-leaflet-map-using-shp
+  # states <- states %>% sf::st_transform("+proj=longlat +datum=WGS84")
+
+  total_population <- getFakeTotalPop(nrow(states))
+
+  custom_data_df <- data.frame(
+    code_state = states$code_state,
+    total_population = total_population,
+    total_vaccinated = getFakeVaccinatedPop(total_population),
+    breastfeeding_complete = getBreastfeedingComplete(total_population),
+    year = year
+  )
+
+  data <- states %>% left_join(custom_data_df, by = c("code_state" = "code_state"))
+  return(data)
+}
